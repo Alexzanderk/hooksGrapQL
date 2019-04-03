@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import ReactMapGL, { NavigationControl } from 'react-map-gl';
-
-import { withStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from 'react';
+import ReactMapGL, { NavigationControl, Marker } from 'react-map-gl';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/DeleteTwoTone';
+
+import PinIcon from './PinIcon';
+import { withStyles } from '@material-ui/core/styles';
 
 const INITIAL_VIEWPORT = {
     latitude: 37.75,
@@ -14,6 +15,24 @@ const INITIAL_VIEWPORT = {
 
 const Map = ({ classes }) => {
     const [viewPort, setViewPort] = useState(INITIAL_VIEWPORT);
+    const [userPosition, setUserPosition] = useState(null);
+
+    useEffect(() => {
+        getUserPosition();
+    }, []);
+
+    const getUserPosition = () => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const { latitude, longitude } = position.coords;
+                setViewPort({ ...viewPort, latitude, longitude });
+                setUserPosition({ latitude, longitude });
+                console.log(userPosition);
+            });
+        }
+    };
+    console.log(userPosition);
+    // console.log(viewPort)
     return (
         <div className={classes.root}>
             <ReactMapGL
@@ -28,6 +47,17 @@ const Map = ({ classes }) => {
                         onViewportChange={viewPort => setViewPort(viewPort)}
                     />
                 </div>
+
+                {/* pin for users current position */}
+                {userPosition && (
+                    <Marker
+                        latitude={userPosition.latitude}
+                        longitude={userPosition.longitude}
+                        offsetLeft={-19}
+                        offsetTop={-37}>
+                        <PinIcon color='red' size={40} />
+                    </Marker>
+                )}
             </ReactMapGL>
         </div>
     );
