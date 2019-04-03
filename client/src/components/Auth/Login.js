@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { GraphQLClient } from 'graphql-request';
 import { withStyles } from '@material-ui/core/styles';
 // import Typography from "@material-ui/core/Typography";
+
+import Contex from '../../context';
 
 const ME_QUERY = `
   {
@@ -15,6 +17,8 @@ const ME_QUERY = `
 `;
 
 const Login = ({ classes }) => {
+    const { dispatch } = useContext(Contex);
+
     const onSuccess = async googleUser => {
         const idToken = googleUser.getAuthResponse().id_token;
         const client = new GraphQLClient('http://localhost:4000/graphql', {
@@ -22,9 +26,8 @@ const Login = ({ classes }) => {
                 authorization: idToken
             }
         });
-        console.log('client', client)
         const data = await client.request(ME_QUERY);
-        console.log(data);
+        dispatch({ type: 'LOGIN_USER', payload: data.me });
     };
 
     return (
