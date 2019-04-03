@@ -24,7 +24,6 @@ const createNewUser = googleUser => {
 
 exports.findOrCreateUser = async token => {
     const googleUser = await verifyAuthToken(token);
-    console.log(googleUser);
     const user = await checkIfUserExist(googleUser.email);
     return user ? user : createNewUser(googleUser);
 };
