@@ -1,4 +1,6 @@
 import React, { useState, useContext } from 'react';
+import { GraphQLClient } from 'graphql-request';
+import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -9,17 +11,66 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SaveIcon from '@material-ui/icons/SaveTwoTone';
 import Context from '../../context';
 
+import { CREATE_PIN_MUTATION } from '../../graphql/mutations.js';
+
 const CreatePin = ({ classes }) => {
     const [title, setTitle] = useState('');
     const [image, setImage] = useState('');
     const [content, setContent] = useState('');
+    const [submited, setSubmited] = useState(false);
 
-    const { dispatch } = useContext(Context);
+    const { state, dispatch } = useContext(Context);
 
-    const handleSubmit = e => {
-        e.preventDefault();
+    const handleSubmit = async e => {
+        try {
+            e.preventDefault();
 
-        console.log(title, image, content);
+            setSubmited(true);
+            const token = window.gapi.auth2
+                .getAuthInstance()
+                .currentUser.get()
+                .getAuthResponse().id_token;
+            const client = new GraphQLClient('http://localhost:4000/graphql', {
+                headers: {
+                    authorization: token
+                }
+            });
+            const url = await handleImageUpload();
+            const { latitude, longitude } = state.draft;
+            const variables = {
+                title,
+                image: url,
+                content,
+                latitude,
+                longitude
+            };
+            const { createPin } = await client.request(
+                CREATE_PIN_MUTATION,
+                variables
+            );
+            handleDeleteDraft();
+
+            console.log('Created pin:', { createPin });
+        } catch (err) {
+            setSubmited(false);
+            console.error('Error created pin:', err);
+        }
+    };
+
+    const handleImageUpload = async () => {
+        const data = new FormData();
+        data.append('file', image);
+        data.append('upload_preset', 'geopins');
+        data.append('cloud_name', 'alexzanderk');
+        try {
+            const res = await axios.post(
+                'https://api.cloudinary.com/v1_1/alexzanderk/image/upload',
+                data
+            );
+            return res.data.url;
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const handleDeleteDraft = () => {
@@ -91,7 +142,9 @@ const CreatePin = ({ classes }) => {
                     variant="contained"
                     className={classes.button}
                     color="secondary"
-                    disabled={!title.trim() || !content.trim() || !image}
+                    disabled={
+                        !title.trim() || !content.trim() || !image || submited
+                    }
                     onClick={handleSubmit}>
                     Save
                     <SaveIcon className={classes.leftIcon} />
