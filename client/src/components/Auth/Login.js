@@ -3,7 +3,7 @@ import { GoogleLogin } from 'react-google-login';
 import { GraphQLClient } from 'graphql-request';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import { BASE_URL } from '../../client';
 import { ME_QUERY } from '../../graphql/queries';
 
 import Contex from '../../context';
@@ -14,7 +14,7 @@ const Login = ({ classes }) => {
     const onSuccess = async googleUser => {
         try {
             const idToken = googleUser.getAuthResponse().id_token;
-            const client = new GraphQLClient('http://localhost:4000/graphql', {
+            const client = new GraphQLClient(BASE_URL, {
                 headers: {
                     authorization: idToken
                 }
@@ -50,7 +50,7 @@ const Login = ({ classes }) => {
                 onSuccess={onSuccess}
                 onFailure={onFailure}
                 isSignedIn={true}
-                buttonText='Loggin with Google'
+                buttonText="Loggin with Google"
                 theme="dark"
             />
         </div>
