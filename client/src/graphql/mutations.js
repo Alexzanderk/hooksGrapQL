@@ -7,6 +7,7 @@ export const CREATE_PIN_MUTATION = `
             latitude: $latitude,
             longitude: $longitude
         }) {
+            _id
             title
             image
             content
