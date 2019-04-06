@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import ReactMapGL, { NavigationControl, Marker } from 'react-map-gl';
+import diffInMinutes from 'date-fns/difference_in_minutes';
 // import Button from '@material-ui/core/Button';
 // import Typography from '@material-ui/core/Typography';
 // import DeleteIcon from '@material-ui/icons/DeleteTwoTone';
@@ -59,7 +60,13 @@ const Map = ({ classes }) => {
             payload: { longitude, latitude }
         });
     };
-    // console.log(viewPort)
+
+    const highlightNewPin = pin => {
+        console.log((pin.createdAt))
+        const isNewPin = diffInMinutes(Date.now(), pin.createdAt) <= 15;
+        return isNewPin ? 'limegreen' : 'darkblue';
+    };
+
     return (
         <div className={classes.root}>
             <ReactMapGL
@@ -97,15 +104,15 @@ const Map = ({ classes }) => {
                     </Marker>
                 )}
 
-                {state.pins.map((pin) => (
+                {state.pins.map(pin => (
                     <Marker
-                    key={pin._id}
-                    latitude={pin.latitude}
-                    longitude={pin.longitude}
-                    offsetLeft={-19}
-                    offsetTop={-37}>
-                    <PinIcon color="darkblue" size={40} />
-                </Marker>
+                        key={pin._id}
+                        latitude={pin.latitude}
+                        longitude={pin.longitude}
+                        offsetLeft={-19}
+                        offsetTop={-37}>
+                        <PinIcon color={highlightNewPin(pin)} size={40} />
+                    </Marker>
                 ))}
             </ReactMapGL>
 

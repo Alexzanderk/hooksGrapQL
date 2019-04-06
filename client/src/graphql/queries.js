@@ -17,6 +17,7 @@ export const GET_PINS_QUERY = `
       content
       latitude
       longitude
+      createdAt
       author {
         _id
         name
