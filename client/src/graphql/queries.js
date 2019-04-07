@@ -1,9 +1,10 @@
 export const ME_QUERY = `
 {
   me {
-  name,
-  email
-  picture
+    _id
+    name,
+    email
+    picture
   }
 }
 `;
@@ -36,4 +37,4 @@ export const GET_PINS_QUERY = `
       }
     }
   }
-`
+`;
