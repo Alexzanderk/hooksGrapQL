@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const PinSchema = new mongoose.Schema(
     {
-        createdAt: String,
+        createdAt: Date,
         title: String,
         content: String,
         image: String,

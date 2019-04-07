@@ -4,6 +4,7 @@ export const PIN_ADDED_SUBSCRIPTION = gql`
     subscription {
         pinAdded {
             _id
+            createdAt
             title
             image
             content
@@ -17,6 +18,7 @@ export const PIN_ADDED_SUBSCRIPTION = gql`
             }
             comments {
                 text
+                createdAt
                 author {
                     _id
                     name
@@ -43,6 +45,7 @@ export const PIN_UPDATED_SUBSCRIPTION = gql`
             }
             comments {
                 text
+                createdAt
                 author {
                     _id
                     name

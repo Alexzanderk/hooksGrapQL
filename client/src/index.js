@@ -30,7 +30,7 @@ const client = new ApolloClient({
 const Root = () => {
     const initialState = useContext(Context);
     const [state, dispatch] = useReducer(reducer, initialState);
-
+    
     return (
         <Router>
             <ApolloProvider client={client}>

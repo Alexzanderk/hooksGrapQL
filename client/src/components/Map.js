@@ -70,7 +70,7 @@ const Map = ({ classes }) => {
     };
 
     const highlightNewPin = pin => {
-        const isNewPin = diffInMinutes(Date.now(), pin.createdAt) <= 30;
+        const isNewPin = diffInMinutes(Date.now(), Number(pin.createdAt)) <= 30;
         return isNewPin ? 'limegreen' : 'darkblue';
     };
 
@@ -83,11 +83,10 @@ const Map = ({ classes }) => {
 
     const handleDeletePin = async pin => {
         const variables = { pinId: pin._id };
-        const { deletePin } = await client.request(
+        await client.request(
             DELETED_PIN_MUTATION,
             variables
         );
-        // dispatch({ type: 'DELETE_PIN', payload: deletePin });
         setPopup(null);
     };
 
@@ -189,6 +188,7 @@ const Map = ({ classes }) => {
                 subscription={PIN_UPDATED_SUBSCRIPTION}
                 onSubscriptionData={({ subscriptionData }) => {
                     const { pinUpdated } = subscriptionData.data;
+                    console.log({pinUpdated})
                     dispatch({type: "CREATE_COMMENT", payload: pinUpdated})
                 }}
             />

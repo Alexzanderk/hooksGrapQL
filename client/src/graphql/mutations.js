@@ -47,6 +47,7 @@ export const CREATE_COMMENT_MUTATION = `
             }
             comments {
                 text
+                createdAt
                 author {
                     _id
                     name
