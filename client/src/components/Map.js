@@ -4,6 +4,7 @@ import diffInMinutes from 'date-fns/difference_in_minutes';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/DeleteTwoTone';
+import { Subscription } from 'react-apollo';
 
 import Blog from './Blog';
 import PinIcon from './PinIcon';
@@ -13,6 +14,11 @@ import Context from '../context';
 import { useClient } from '../client';
 import { GET_PINS_QUERY } from '../graphql/queries';
 import { DELETED_PIN_MUTATION } from '../graphql/mutations';
+import {
+    PIN_ADDED_SUBSCRIPTION,
+    PIN_DELETED_SUBSCRIPTION,
+    PIN_UPDATED_SUBSCRIPTION
+} from '../graphql/subscriptions';
 
 const INITIAL_VIEWPORT = {
     latitude: 37.75,
@@ -81,7 +87,7 @@ const Map = ({ classes }) => {
             DELETED_PIN_MUTATION,
             variables
         );
-        dispatch({ type: 'DELETE_PIN', payload: deletePin });
+        // dispatch({ type: 'DELETE_PIN', payload: deletePin });
         setPopup(null);
     };
 
@@ -171,6 +177,28 @@ const Map = ({ classes }) => {
                     </Popup>
                 )}
             </ReactMapGL>
+
+            <Subscription
+                subscription={PIN_ADDED_SUBSCRIPTION}
+                onSubscriptionData={({ subscriptionData }) => {
+                    const { pinAdded } = subscriptionData.data;
+                    dispatch({type: "CREATE_PIN", payload: pinAdded})
+                }}
+            />
+            <Subscription
+                subscription={PIN_UPDATED_SUBSCRIPTION}
+                onSubscriptionData={({ subscriptionData }) => {
+                    const { pinUpdated } = subscriptionData.data;
+                    dispatch({type: "CREATE_COMMENT", payload: pinUpdated})
+                }}
+            />
+            <Subscription
+                subscription={PIN_DELETED_SUBSCRIPTION}
+                onSubscriptionData={({ subscriptionData }) => {
+                    const { pinDeleted } = subscriptionData.data;
+                    dispatch({type: "DELETE_PIN", payload: pinDeleted})
+                }}
+            />
 
             {/* Blog area */}
 

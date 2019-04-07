@@ -42,7 +42,7 @@ const CreatePin = ({ classes }) => {
                 CREATE_PIN_MUTATION,
                 variables
             );
-            dispatch({ type: 'CREATE_PIN', payload: createPin });
+            // dispatch({ type: 'CREATE_PIN', payload: createPin });
             handleDeleteDraft();
 
             console.log('Created pin:', { createPin });

@@ -24,7 +24,7 @@ const CreateComment = ({ classes }) => {
             CREATE_COMMENT_MUTATION,
             variables
         );
-        dispatch({ type: 'CREATE_COMMENT', payload: createComment });
+        // dispatch({ type: 'CREATE_COMMENT', payload: createComment });
         setComment('');
     };
 
