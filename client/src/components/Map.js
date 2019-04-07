@@ -12,6 +12,7 @@ import Context from '../context';
 
 import { useClient } from '../client';
 import { GET_PINS_QUERY } from '../graphql/queries';
+import { DELETED_PIN_MUTATION } from '../graphql/mutations';
 
 const INITIAL_VIEWPORT = {
     latitude: 37.75,
@@ -75,9 +76,18 @@ const Map = ({ classes }) => {
     };
 
     const isAuthUser = () => state.currentUser._id === popup.author._id;
-    // console.log(isAuthUser())
-    console.log(popup)
-    console.log(state)
+
+    const handleDeletePin = async pin => {
+        const variables = { pinId: pin._id };
+        const { deletePin } = await client.request(
+            DELETED_PIN_MUTATION,
+            variables
+        );
+        dispatch({ type: 'DELETE_PIN', payload: deletePin });
+        setPopup(null);
+        console.log({ deletePin });
+    };
+
     return (
         <div className={classes.root}>
             <ReactMapGL
@@ -154,8 +164,10 @@ const Map = ({ classes }) => {
                                 {popup.longitude.toFixed(6)}
                             </Typography>
                             {isAuthUser() && (
-                                <Button>
-                                    <DeleteIcon className={classes.deleteIcon} />
+                                <Button onClick={() => handleDeletePin(popup)}>
+                                    <DeleteIcon
+                                        className={classes.deleteIcon}
+                                    />
                                 </Button>
                             )}
                         </div>
