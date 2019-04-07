@@ -52,7 +52,6 @@ const Map = ({ classes }) => {
     };
 
     const handleClickMap = ({ lngLat, leftButton }) => {
-        console.log({ lngLat, leftButton });
         if (!leftButton) return;
         if (!state.draft) {
             dispatch({ type: 'CREATE_DRAFT' });
@@ -65,7 +64,6 @@ const Map = ({ classes }) => {
     };
 
     const highlightNewPin = pin => {
-        console.log(pin.createdAt);
         const isNewPin = diffInMinutes(Date.now(), pin.createdAt) <= 30;
         return isNewPin ? 'limegreen' : 'darkblue';
     };
@@ -85,7 +83,6 @@ const Map = ({ classes }) => {
         );
         dispatch({ type: 'DELETE_PIN', payload: deletePin });
         setPopup(null);
-        console.log({ deletePin });
     };
 
     return (

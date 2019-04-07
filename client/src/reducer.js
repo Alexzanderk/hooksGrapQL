@@ -72,6 +72,19 @@ export default function(state, { type, payload }) {
                 pins: filteredPins
             };
 
+        case 'CREATE_COMMENT':
+            const updateCurrentPin = payload;
+            const updatedPins = state.pins.map(pin => {
+                return pin._id === updateCurrentPin._id
+                    ? updateCurrentPin
+                    : pin;
+            });
+            return {
+                ...state,
+                pins: updatedPins,
+                currentPin: updateCurrentPin
+            };
+
         default:
             return state;
     }
