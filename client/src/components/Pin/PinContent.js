@@ -5,6 +5,9 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import FaceIcon from '@material-ui/icons/Face';
 import format from 'date-fns/format';
 
+import Comments from '../Comment/Comments';
+import CreateComment from '../Comment/CreateComment';
+
 import Context from '../../context';
 
 const PinContent = ({ classes }) => {
@@ -35,11 +38,11 @@ const PinContent = ({ classes }) => {
                 <AccessTimeIcon className={classes.icon} />
                 {format(createdAt, 'MMM Do, YYYY')}
             </Typography>
-            <Typography
-                variant="subtitle1"
-                gutterBottom>
+            <Typography variant="subtitle1" gutterBottom>
                 {content}
             </Typography>
+            <CreateComment  />
+            <Comments comments={comments} />
         </div>
     );
 };
